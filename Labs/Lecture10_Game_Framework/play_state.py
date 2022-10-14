@@ -1,4 +1,10 @@
 from pico2d import *
+import game_framework
+import logo_state
+import title_state
+
+boy = None
+grass = None
 
 class Grass:
     def __init__(self):
@@ -22,20 +28,22 @@ class Boy:
 
 
 def handle_events():
-    global running
+    #global running
     events = get_events()
     for event in events:
         if event.type == SDL_QUIT:
-            running = False
+            game_framework.quit()
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
-            running = False
+            game_framework.change_state(title_state)
+    delay(0.1)
+
 def enter(): # 초기화
-    global boy, grass, running
+    global boy, grass
     boy = Boy()
     grass = Grass()
-    running = True
 
 def exit():  # 종료
+    global boy, grass
     del boy, grass
 
 def update(): # 월드에 존재하는 객체들을 업데이트한다
@@ -47,20 +55,7 @@ def draw():
     boy.draw()
     update_canvas()
 
-boy = None
-grass = None
-running = True
 
-# game main loop code
-open_canvas()
-enter()
-while running:
-    handle_events()
-    update()
-    draw()
-    delay(0.05)
-exit()
-close_canvas()
 
 
 
